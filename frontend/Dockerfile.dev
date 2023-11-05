@@ -1,0 +1,8 @@
+FROM node:latest
+EXPOSE 3000
+RUN mkdir -p /frontend/public /frontend/src
+WORKDIR /frontend
+COPY package.json /frontend/package.json
+COPY package-lock.json /frontend/package-lock.json
+RUN npm install
+CMD ["npm", "run", "start"]

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [accessToken, setAccessToken] = useState('');
 
   const handleLogin = async () => {
     try {
@@ -15,15 +16,36 @@ const Login = () => {
       });
 
       if (response.ok) {
-        console.log('เข้าสู่ระบบสำเร็จ');
-        // ทำตามขั้นตอนถัดไป หรือเปลี่ยนเส้นทางไปหน้าใด ๆ ตามที่คุณต้องการ
+        const data = await response.json();
+        setAccessToken(data.accessToken);
+        console.log('Login successful');
       } else {
-        console.error('การเข้าสู่ระบบไม่สำเร็จ');
+        console.error('Login failed');
       }
     } catch (error) {
-      console.error('เกิดข้อผิดพลาดในการเชื่อมต่อกับ API', error);
+      console.error('Error connecting to API', error);
     }
   };
+
+  const handleFetchUserData = async () => {
+    try {
+      const response = await fetch('/api/users', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('User data:', data.users);
+      } else {
+        console.error('Failed to fetch user data');
+      }
+    } catch (error) {
+      console.error('Error connecting to API', error);
+    }
+  }
+  
 
   return (
     <div>
@@ -49,6 +71,9 @@ const Login = () => {
         </div>
         <button type="button" onClick={handleLogin}>
           เข้าสู่ระบบ
+        </button>
+        <button type="button" onClick={handleFetchUserData}>
+          Fetch User Data
         </button>
       </form>
     </div>

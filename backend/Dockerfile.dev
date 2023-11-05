@@ -1,0 +1,10 @@
+FROM node:latest
+RUN mkdir -p /backend/config /backend/src
+WORKDIR /backend
+
+COPY package.json /backend/package.json
+COPY package-lock.json /backend/package-lock.json
+
+RUN npm install
+
+CMD ["npm", "run", "start:dev"]
